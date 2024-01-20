@@ -5,7 +5,7 @@ interface IAuthLayout {
 }
 
 const AuthLayout: FC<IAuthLayout> = ({children}) => {
-  return <div className='bg-red-500'>{children}</div>
+  return <div className='h-full flex justify-center items-center'>{children}</div>
 }
 
 export default AuthLayout
