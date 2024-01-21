@@ -1,11 +1,12 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { cn } from "@/lib/utils";
 import { extractRouterConfig } from "uploadthing/server";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { Open_Sans } from "next/font/google";
+import type { Metadata } from "next";
+
+import { cn } from "@/lib/utils";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { ModalProvider, ThemeProvider } from "@/components/providers";
 
 import "./globals.css";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
                */
               routerConfig={extractRouterConfig(ourFileRouter)}
             />
+            <ModalProvider />
             {children}
           </ThemeProvider>
         </body>
