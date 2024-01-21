@@ -4,6 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import FileUpload from "../fileUpload";
 
 import {
   Dialog,
@@ -59,7 +60,7 @@ const InitialModel: FC<IInitialModelProps> = ({}) => {
       <DialogContent className="overflow-hidden bg-white p-0 text-black">
         <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-center text-2xl font-bold">
-            Create your serve
+            Create your server
           </DialogTitle>
 
           <DialogDescription className="text-center text-zinc-500">
@@ -72,7 +73,25 @@ const InitialModel: FC<IInitialModelProps> = ({}) => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
               <div className="flex items-center justify-center text-center">
-                TODO: Image upload
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70">
+                        Server image
+                      </FormLabel>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="serverImage"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField
