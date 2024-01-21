@@ -3,6 +3,7 @@ import { FC } from "react";
 import { initialProfile } from "@/lib/initial-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { InitialModel } from "@/components/models";
 
 interface ISetupPageProps {}
 
@@ -20,7 +21,11 @@ const SetupPage: FC<ISetupPageProps> = async ({}) => {
 
   if (server) return redirect(`/servers/${server.id}`);
 
-  return <div>Create a server</div>;
+  return (
+    <div>
+      <InitialModel />
+    </div>
+  );
 };
 
 export default SetupPage;
