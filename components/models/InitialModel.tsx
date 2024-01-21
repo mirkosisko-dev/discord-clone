@@ -1,9 +1,12 @@
 "use client";
 
+import * as z from "zod";
+import axios from "axios";
+
 import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import FileUpload from "../fileUpload";
 
 import {
@@ -24,6 +27,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface IInitialModelProps {}
 
@@ -39,6 +43,8 @@ const InitialModel: FC<IInitialModelProps> = ({}) => {
     setIsMounted(true);
   }, []);
 
+  const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +56,15 @@ const InitialModel: FC<IInitialModelProps> = ({}) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("onSubmit -> values:", values);
+    try {
+      await axios.post("/api/servers", values);
+
+      form.reset();
+      router.refresh();
+      window.location.reload();
+    } catch (error) {
+      console.log("onSubmit error:", error);
+    }
   };
 
   if (!isMounted) return null;
