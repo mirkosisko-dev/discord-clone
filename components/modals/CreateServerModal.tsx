@@ -28,7 +28,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { useModal } from "@/hooks/useModalStore";
+import { useModalStore } from "@/hooks/useModalStore";
 
 interface ICreateServerModalProps {}
 
@@ -38,7 +38,7 @@ const formSchema = z.object({
 });
 
 const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
-  const { isOpen, type, onClose } = useModal();
+  const { isOpen, type, onClose } = useModalStore();
 
   const router = useRouter();
 

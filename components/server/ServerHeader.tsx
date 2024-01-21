@@ -1,8 +1,10 @@
 "use client";
 
-import { ServerWithMembersWithProfiles } from "@/types";
 import { MemberRole } from "@prisma/client";
 import { FC } from "react";
+
+import { ServerWithMembersWithProfiles } from "@/types";
+import { useModalStore } from "@/hooks/useModalStore";
 import {
   ChevronDown,
   LogOut,
@@ -26,10 +28,10 @@ interface IServerHeaderProps {
 }
 
 const ServerHeader: FC<IServerHeaderProps> = ({ server, role }) => {
+  const { onOpen } = useModalStore();
+
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
-
-  console.log({ isAdmin, isModerator });
 
   return (
     <DropdownMenu>
@@ -42,7 +44,10 @@ const ServerHeader: FC<IServerHeaderProps> = ({ server, role }) => {
 
       <DropdownMenuContent className="w-56 space-y-[2px] text-xs font-medium text-black dark:text-neutral-400">
         {isModerator && (
-          <DropdownMenuItem className="cursor-pointer px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400">
+          <DropdownMenuItem
+            className="cursor-pointer px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400"
+            onClick={() => onOpen("invite", { server })}
+          >
             Invite People
             <UserPlus className="ml-auto h-5 w-5" />
           </DropdownMenuItem>
