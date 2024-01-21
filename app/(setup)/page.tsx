@@ -3,7 +3,7 @@ import { FC } from "react";
 import { initialProfile } from "@/lib/initialProfile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { InitialModel } from "@/components/models";
+import { InitialModal } from "@/components/modals";
 
 interface ISetupPageProps {}
 
@@ -23,7 +23,7 @@ const SetupPage: FC<ISetupPageProps> = async ({}) => {
 
   return (
     <div>
-      <InitialModel />
+      <InitialModal />
     </div>
   );
 };

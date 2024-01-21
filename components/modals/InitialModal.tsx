@@ -29,14 +29,14 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
-interface IInitialModelProps {}
+interface IInitialModalProps {}
 
 const formSchema = z.object({
   name: z.string().min(1, "Server name is required"),
   imageUrl: z.string().min(1, "Image url is required"),
 });
 
-const InitialModel: FC<IInitialModelProps> = ({}) => {
+const InitialModal: FC<IInitialModalProps> = ({}) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -142,4 +142,4 @@ const InitialModel: FC<IInitialModelProps> = ({}) => {
   );
 };
 
-export default InitialModel;
+export default InitialModal;
