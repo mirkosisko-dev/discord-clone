@@ -1,6 +1,8 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import axios from "axios";
+
+import { FC, useState } from "react";
 import { Check, Copy, RefreshCw } from "lucide-react";
 
 import { useModalStore } from "@/hooks/useModalStore";
@@ -10,7 +12,6 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useOrigin } from "@/hooks/useOrigin";
-import axios from "axios";
 
 interface IInviteModalProps {}
 

@@ -6,6 +6,7 @@ import {
   CreateServerModal,
   EditServerModal,
   InviteModal,
+  LeaveServerModal,
   MembersModal,
 } from "../modals";
 
@@ -25,6 +26,7 @@ export const ModalProvider = () => {
       <EditServerModal />
       <MembersModal />
       <CreateChannelModal />
+      <LeaveServerModal />
     </>
   );
 };

@@ -93,7 +93,10 @@ const ServerHeader: FC<IServerHeaderProps> = ({ server, role }) => {
         )}
 
         {!isAdmin && (
-          <DropdownMenuItem className="cursor-pointer px-3 py-2 text-sm text-rose-500">
+          <DropdownMenuItem
+            className="cursor-pointer px-3 py-2 text-sm text-rose-500"
+            onClick={() => onOpen("leaveServer", { server })}
+          >
             Leave Server
             <LogOut className="ml-auto h-5 w-5" />
           </DropdownMenuItem>
