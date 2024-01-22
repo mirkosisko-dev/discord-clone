@@ -3,6 +3,7 @@ import CreateServerModal from "./CreateServerModal";
 import InviteModal from "./InviteModal";
 import EditServerModal from "./EditServerModal";
 import MembersModal from "./MembersModal";
+import CreateChannelModal from "./CreateChannelModal";
 
 export {
   InitialModal,
@@ -10,4 +11,5 @@ export {
   InviteModal,
   EditServerModal,
   MembersModal,
+  CreateChannelModal,
 };
