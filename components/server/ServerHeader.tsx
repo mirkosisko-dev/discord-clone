@@ -54,7 +54,10 @@ const ServerHeader: FC<IServerHeaderProps> = ({ server, role }) => {
         )}
 
         {isAdmin && (
-          <DropdownMenuItem className="cursor-pointer px-3 py-2 text-sm">
+          <DropdownMenuItem
+            className="cursor-pointer px-3 py-2 text-sm"
+            onClick={() => onOpen("editServer", { server })}
+          >
             Server Settings
             <Settings className="ml-auto h-5 w-5" />
           </DropdownMenuItem>
