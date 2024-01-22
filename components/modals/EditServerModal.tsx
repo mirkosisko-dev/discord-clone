@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 
 import FileUpload from "../fileUpload";
 
+import { useModalStore } from "@/hooks/useModalStore";
+
 import {
   Dialog,
   DialogContent,
@@ -28,7 +30,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useModalStore } from "@/hooks/useModalStore";
 
 interface IEditServerModalProps {}
 
@@ -52,8 +53,6 @@ const EditServerModal: FC<IEditServerModalProps> = ({}) => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const { server } = data;
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/servers/${server?.id}`, values);
@@ -66,6 +65,8 @@ const EditServerModal: FC<IEditServerModalProps> = ({}) => {
       console.log("onSubmit error:", error);
     }
   };
+
+  const { server } = data;
 
   useEffect(() => {
     if (server) {

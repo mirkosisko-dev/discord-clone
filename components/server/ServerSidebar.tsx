@@ -44,7 +44,7 @@ const ServerSidebar: FC<IServerSidebarProps> = async ({ serverId }) => {
   const audioChannels = server.channels.filter(
     (channel) => channel.type === ChannelType.AUDIO,
   );
-  const videChannels = server.channels.filter(
+  const videoChannels = server.channels.filter(
     (channel) => channel.type === ChannelType.VIDEO,
   );
 

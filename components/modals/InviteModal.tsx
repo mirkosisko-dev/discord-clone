@@ -6,12 +6,12 @@ import { FC, useState } from "react";
 import { Check, Copy, RefreshCw } from "lucide-react";
 
 import { useModalStore } from "@/hooks/useModalStore";
+import { useOrigin } from "@/hooks/useOrigin";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useOrigin } from "@/hooks/useOrigin";
 
 interface IInviteModalProps {}
 
@@ -20,6 +20,7 @@ const InviteModal: FC<IInviteModalProps> = ({}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { isOpen, type, onClose, onOpen, data } = useModalStore();
+
   const origin = useOrigin();
 
   const { server } = data;
