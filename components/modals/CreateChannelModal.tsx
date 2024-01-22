@@ -1,18 +1,18 @@
 "use client";
 
 import * as z from "zod";
+import qs from "query-string";
 import axios from "axios";
 
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import FileUpload from "../fileUpload";
+import { useParams, useRouter } from "next/navigation";
+import { ChannelType } from "@prisma/client";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogFooter,
   DialogTitle,
@@ -25,28 +25,39 @@ import {
   FormField,
   FormItem,
 } from "../ui/form";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+
 import { useModalStore } from "@/hooks/useModalStore";
 
-interface ICreateServerModalProps {}
+interface ICreateChannelModal {}
 
 const formSchema = z.object({
-  name: z.string().min(1, "Server name is required"),
-  imageUrl: z.string().min(1, "Image url is required"),
+  name: z
+    .string()
+    .min(1, "Channel name is required")
+    .refine((name) => name !== "general", "Channel name cannot be 'general'"),
+  type: z.nativeEnum(ChannelType),
 });
 
-const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
+const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
   const { isOpen, type, onClose } = useModalStore();
 
   const router = useRouter();
+  const params = useParams();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      imageUrl: "",
+      type: ChannelType.TEXT,
     },
   });
 
@@ -54,7 +65,14 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/servers", values);
+      const url = qs.stringifyUrl({
+        url: "/api/channels",
+        query: {
+          serverId: params?.serverId,
+        },
+      });
+
+      await axios.post(url, values);
 
       form.reset();
       router.refresh();
@@ -67,7 +85,7 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
 
   return (
     <Dialog
-      open={isOpen && type === "createServer"}
+      open={isOpen && type === "createChannel"}
       onOpenChange={() => {
         form.reset();
         onClose();
@@ -76,56 +94,65 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
       <DialogContent className="overflow-hidden bg-white p-0 text-black">
         <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-center text-2xl font-bold">
-            Create your server
+            Create Channel
           </DialogTitle>
-
-          <DialogDescription className="text-center text-zinc-500">
-            Give your server a personality with a name and image. You can always
-            change it later.
-          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">
-                <FormField
-                  control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70">
-                        Server image
-                      </FormLabel>
-                      <FormControl>
-                        <FileUpload
-                          endpoint="serverImage"
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70">
-                      Server name
+                      Channel name
                     </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        placeholder="Enter server name"
+                        placeholder="Enter channel name"
                         className="border-0 bg-zinc-300/50 text-black focus-visible:ring-0 focus-visible:ring-offset-0"
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase text-zinc-500 dark:text-secondary/70">
+                      Channel type
+                    </FormLabel>
+                    <Select
+                      disabled={isLoading}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-0 bg-zinc-300/50 capitalize text-black outline-none ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                          <SelectValue placeholder="Select a channel type" />
+                        </SelectTrigger>
+                      </FormControl>
+
+                      <SelectContent>
+                        {Object.values(ChannelType).map((type) => (
+                          <SelectItem
+                            key={type}
+                            value={type}
+                            className="capitalize"
+                          >
+                            {type.toLowerCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -144,4 +171,4 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
   );
 };
 
-export default CreateServerModal;
+export default CreateChannelModal;

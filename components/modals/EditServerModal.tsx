@@ -3,11 +3,14 @@
 import * as z from "zod";
 import axios from "axios";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import FileUpload from "../fileUpload";
+
+import { useModalStore } from "@/hooks/useModalStore";
 
 import {
   Dialog,
@@ -27,18 +30,16 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { useModalStore } from "@/hooks/useModalStore";
 
-interface ICreateServerModalProps {}
+interface IEditServerModalProps {}
 
 const formSchema = z.object({
   name: z.string().min(1, "Server name is required"),
   imageUrl: z.string().min(1, "Image url is required"),
 });
 
-const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
-  const { isOpen, type, onClose } = useModalStore();
+const EditServerModal: FC<IEditServerModalProps> = ({}) => {
+  const { isOpen, type, onClose, data } = useModalStore();
 
   const router = useRouter();
 
@@ -54,7 +55,7 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/servers", values);
+      await axios.patch(`/api/servers/${server?.id}`, values);
 
       form.reset();
       router.refresh();
@@ -65,9 +66,18 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
     }
   };
 
+  const { server } = data;
+
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
+
   return (
     <Dialog
-      open={isOpen && type === "createServer"}
+      open={isOpen && type === "editServer"}
       onOpenChange={() => {
         form.reset();
         onClose();
@@ -134,7 +144,7 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
 
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button disabled={isLoading} variant="primary">
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -144,4 +154,4 @@ const CreateServerModal: FC<ICreateServerModalProps> = ({}) => {
   );
 };
 
-export default CreateServerModal;
+export default EditServerModal;

@@ -4,12 +4,12 @@ import { FC } from "react";
 import { Plus } from "lucide-react";
 
 import ActionTooltip from "../actionTooltip";
-import { useModal } from "@/hooks/useModalStore";
+import { useModalStore } from "@/hooks/useModalStore";
 
 interface INavigationActionProps {}
 
 const NavigationAction: FC<INavigationActionProps> = ({}) => {
-  const { onOpen } = useModal();
+  const { onOpen } = useModalStore();
   return (
     <div>
       <ActionTooltip side="right" align="center" label="Add a server">
