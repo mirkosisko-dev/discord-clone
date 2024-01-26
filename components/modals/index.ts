@@ -6,6 +6,8 @@ import MembersModal from "./MembersModal";
 import CreateChannelModal from "./CreateChannelModal";
 import LeaveServerModal from "./LeaveServerModal";
 import DeleteServerModal from "./DeleteServerModal";
+import DeleteChannelModal from "./DeleteChannelModal";
+import EditChannelModal from "./EditChannelModal";
 
 export {
   InitialModal,
@@ -16,4 +18,6 @@ export {
   CreateChannelModal,
   LeaveServerModal,
   DeleteServerModal,
+  DeleteChannelModal,
+  EditChannelModal,
 };

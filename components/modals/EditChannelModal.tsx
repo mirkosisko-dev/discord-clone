@@ -7,7 +7,7 @@ import axios from "axios";
 import { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ChannelType } from "@prisma/client";
 
 import {
@@ -37,7 +37,7 @@ import { Button } from "../ui/button";
 
 import { useModalStore } from "@/hooks/useModalStore";
 
-interface ICreateChannelModal {}
+interface IEditChannelModal {}
 
 const formSchema = z.object({
   name: z
@@ -47,19 +47,18 @@ const formSchema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 
-const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
+const EditChannelModal: FC<IEditChannelModal> = ({}) => {
   const { isOpen, type, onClose, data } = useModalStore();
 
-  const { channelType } = data;
+  const { channel, server } = data;
 
   const router = useRouter();
-  const params = useParams();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType || ChannelType.TEXT,
+      type: channel?.type || ChannelType.TEXT,
     },
   });
 
@@ -68,13 +67,13 @@ const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: "/api/channels",
+        url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: params?.serverId,
+          serverId: server?.id,
         },
       });
 
-      await axios.post(url, values);
+      await axios.patch(url, values);
 
       form.reset();
       router.refresh();
@@ -86,13 +85,15 @@ const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
   };
 
   useEffect(() => {
-    if (channelType) form.setValue("type", channelType);
-    else form.setValue("type", ChannelType.TEXT);
-  }, [channelType, form]);
+    if (channel) {
+      form.setValue("type", channel.type);
+      form.setValue("name", channel?.name);
+    }
+  }, [channel, form]);
 
   return (
     <Dialog
-      open={isOpen && type === "createChannel"}
+      open={isOpen && type === "editChannel"}
       onOpenChange={() => {
         form.reset();
         onClose();
@@ -101,7 +102,7 @@ const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
       <DialogContent className="overflow-hidden bg-white p-0 text-black">
         <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-center text-2xl font-bold">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
 
@@ -168,7 +169,7 @@ const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
 
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button disabled={isLoading} variant="primary">
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -178,4 +179,4 @@ const CreateChannelModal: FC<ICreateChannelModal> = ({}) => {
   );
 };
 
-export default CreateChannelModal;
+export default EditChannelModal;
