@@ -1,10 +1,10 @@
 import { FC } from "react";
+import { redirect } from "next/navigation";
 import { redirectToSignIn } from "@clerk/nextjs";
 
 import { currentProfile } from "@/lib/currentProfile";
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
-import { ChatHeader } from "@/components/chat";
+import { ChatHeader, ChatInput } from "@/components/chat";
 
 interface IChannelPageProps {
   params: {
@@ -39,16 +39,21 @@ const ChannelPage: FC<IChannelPageProps> = async ({ params }) => {
   return (
     <div className="flex h-full flex-col bg-white dark:bg-[#313338]">
       <ChatHeader
-        // serverId={params.serverId}
-        // name={
-        //   member.profile.name !== "null null"
-        //     ? member.profile.name
-        //     : member.profile.email
-        // }
-        // type="member"
         serverId={params.serverId}
         name={channel.name}
         type="channel"
+      />
+
+      <div className="flex-1">Future Messages</div>
+
+      <ChatInput
+        name={channel.name}
+        type="channel"
+        apiUrl="/api/socket/messages"
+        query={{
+          channelId: channel.id,
+          serverId: channel.serverId,
+        }}
       />
     </div>
   );
