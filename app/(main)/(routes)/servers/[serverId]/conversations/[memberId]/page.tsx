@@ -37,8 +37,6 @@ const MemberPage: FC<IMemberPageProps> = async ({ params }) => {
     params.memberId,
   );
 
-  console.log({ conversation });
-
   if (!conversation) return redirect(`/servers/${params.serverId}`);
 
   const { memberOne, memberTwo } = conversation;
