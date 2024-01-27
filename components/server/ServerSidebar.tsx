@@ -17,9 +17,13 @@ import { Separator } from "../ui/separator";
 
 interface IServerSidebarProps {
   serverId: string;
+  isMobileView?: boolean;
 }
 
-const ServerSidebar: FC<IServerSidebarProps> = async ({ serverId }) => {
+const ServerSidebar: FC<IServerSidebarProps> = async ({
+  serverId,
+  isMobileView = false,
+}) => {
   const profile = await currentProfile();
 
   if (!profile) return redirect("/");
@@ -81,7 +85,7 @@ const ServerSidebar: FC<IServerSidebarProps> = async ({ serverId }) => {
 
   return (
     <div className="flex h-full w-full flex-col bg-[#F2F3F5] text-primary dark:bg-[#2B2D31]">
-      <ServerHeader server={server} role={role} />
+      <ServerHeader server={server} role={role} isMobileView={isMobileView} />
       <ScrollArea className="flex-1 px-3">
         <div className="mt-2">
           <ServerSearch
