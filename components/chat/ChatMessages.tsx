@@ -1,7 +1,7 @@
 "use client";
 
-import { FC, Fragment } from "react";
-import { Member, Message, Profile } from "@prisma/client";
+import { FC, Fragment, useRef, ElementRef } from "react";
+import { Member } from "@prisma/client";
 import { Loader2, ServerCrash, Skull } from "lucide-react";
 import { format } from "date-fns";
 
@@ -10,6 +10,7 @@ import useChatSocket from "@/hooks/useChatSocket";
 
 import { ChatItem, ChatWelcome } from ".";
 import { MessageWithMemberWithProfile } from "@/types";
+import useChatScroll from "@/hooks/useChatScroll";
 
 interface IChatMessagesProps {
   name: string;
@@ -40,19 +41,28 @@ const ChatMessages: FC<IChatMessagesProps> = ({
   const addKey = `chat:${chatId}:messages`;
   const updateKey = `chat:${chatId}:messages:update`;
 
-  const { data, fetchNextPage, hasNextPage, isFetching, status } = useChatQuery(
-    {
+  const chatRef = useRef<ElementRef<"div">>(null);
+  const bottomRef = useRef<ElementRef<"div">>(null);
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useChatQuery({
       queryKey,
       apiUrl,
       paramKey,
       paramValue,
-    },
-  );
+    });
 
   useChatSocket({
     queryKey,
     addKey,
     updateKey,
+  });
+  useChatScroll({
+    chatRef,
+    bottomRef,
+    loadMore: fetchNextPage,
+    shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
+    count: data?.pages[0]?.items?.length ?? 0,
   });
 
   if (status === "pending")
@@ -86,10 +96,25 @@ const ChatMessages: FC<IChatMessagesProps> = ({
     );
 
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto py-4">
-      <div className="flex-1" />
+    <div className="flex flex-1 flex-col overflow-y-auto py-4" ref={chatRef}>
+      {!hasNextPage && <div className="flex-1" />}
 
-      <ChatWelcome type={type} name={name} />
+      {!hasNextPage && <ChatWelcome type={type} name={name} />}
+
+      {hasNextPage && (
+        <div className="flex justify-center">
+          {isFetchingNextPage ? (
+            <Loader2 className="my-4 h-6 w-6 animate-spin text-zinc-500" />
+          ) : (
+            <button
+              className="my-4 text-xs text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+              onClick={() => fetchNextPage()}
+            >
+              Load previous messages
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="mt-auto flex flex-col-reverse">
         {data?.pages?.map((group, i) => (
@@ -112,6 +137,8 @@ const ChatMessages: FC<IChatMessagesProps> = ({
           </Fragment>
         ))}
       </div>
+
+      <div ref={bottomRef} />
     </div>
   );
 };
