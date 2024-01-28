@@ -43,6 +43,7 @@ const ChatInput: FC<IChatInputProps> = ({ apiUrl, query, name, type }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log({ apiUrl, query });
       const url = qs.stringifyUrl({
         url: apiUrl,
         query,
