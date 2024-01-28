@@ -6,6 +6,7 @@ import qs from "query-string";
 import Image from "next/image";
 
 import { FC, useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Member, MemberRole, Profile } from "@prisma/client";
@@ -55,6 +56,9 @@ const ChatItem: FC<IChatItemProps> = ({
   const [isEditing, setIsEditing] = useState(false);
 
   const { onOpen } = useModalStore();
+
+  const router = useRouter();
+  const params = useParams();
 
   const fileType = fileUrl?.split(".").pop();
 
@@ -106,17 +110,29 @@ const ChatItem: FC<IChatItemProps> = ({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const onMemberClick = () => {
+    if (member.id === currentMember.id) return;
+
+    router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
+  };
+
   return (
     <div className="group relative flex w-full items-center p-4 transition hover:bg-black/5">
       <div className="group flex w-full items-start gap-x-2">
-        <div className="cursor-pointer transition hover:drop-shadow-md">
+        <div
+          className="cursor-pointer transition hover:drop-shadow-md"
+          onClick={onMemberClick}
+        >
           <UserAvatar src={member.profile.imageUrl} />
         </div>
 
         <div className="flex w-full flex-col">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p className="cursor-pointer text-sm font-semibold hover:underline">
+              <p
+                className="cursor-pointer text-sm font-semibold hover:underline"
+                onClick={onMemberClick}
+              >
                 {member.profile.name !== "null null"
                   ? member.profile.name
                   : member.profile.email}

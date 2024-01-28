@@ -6,8 +6,10 @@ import { Loader2, ServerCrash, Skull } from "lucide-react";
 import { format } from "date-fns";
 
 import useChatQuery from "@/hooks/useChatQuery";
+import useChatSocket from "@/hooks/useChatSocket";
 
 import { ChatItem, ChatWelcome } from ".";
+import { MessageWithMemberWithProfile } from "@/types";
 
 interface IChatMessagesProps {
   name: string;
@@ -20,12 +22,6 @@ interface IChatMessagesProps {
   paramValue: string;
   type: "channel" | "conversation";
 }
-
-type MessageWithMemberWithProfile = Message & {
-  member: Member & {
-    profile: Profile;
-  };
-};
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -41,6 +37,8 @@ const ChatMessages: FC<IChatMessagesProps> = ({
   type,
 }) => {
   const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:messages`;
+  const updateKey = `chat:${chatId}:messages:update`;
 
   const { data, fetchNextPage, hasNextPage, isFetching, status } = useChatQuery(
     {
@@ -50,6 +48,12 @@ const ChatMessages: FC<IChatMessagesProps> = ({
       paramValue,
     },
   );
+
+  useChatSocket({
+    queryKey,
+    addKey,
+    updateKey,
+  });
 
   if (status === "pending")
     return (
