@@ -5,6 +5,8 @@ import { FC } from "react";
 
 import { ServerWithMembersWithProfiles } from "@/types";
 import { useModalStore } from "@/hooks/useModalStore";
+import { cn } from "@/lib/utils";
+
 import {
   ChevronDown,
   LogOut,
@@ -25,9 +27,14 @@ import {
 interface IServerHeaderProps {
   server: ServerWithMembersWithProfiles;
   role?: MemberRole;
+  isMobileView: boolean;
 }
 
-const ServerHeader: FC<IServerHeaderProps> = ({ server, role }) => {
+const ServerHeader: FC<IServerHeaderProps> = ({
+  server,
+  role,
+  isMobileView,
+}) => {
   const { onOpen } = useModalStore();
 
   const isAdmin = role === MemberRole.ADMIN;
@@ -38,7 +45,9 @@ const ServerHeader: FC<IServerHeaderProps> = ({ server, role }) => {
       <DropdownMenuTrigger className="focus:outline-none" asChild>
         <button className="text-md flex h-12 w-full items-center border-b-2 border-neutral-200 px-3 font-semibold transition hover:bg-zinc-700/10 dark:border-neutral-800 dark:hover:bg-zinc-700/50">
           {server.name}
-          <ChevronDown className="ml-auto h-5 w-5" />
+          <ChevronDown
+            className={cn("ml-auto h-5 w-5", isMobileView && "ml-0")}
+          />
         </button>
       </DropdownMenuTrigger>
 
