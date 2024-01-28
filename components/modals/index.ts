@@ -8,6 +8,7 @@ import LeaveServerModal from "./LeaveServerModal";
 import DeleteServerModal from "./DeleteServerModal";
 import DeleteChannelModal from "./DeleteChannelModal";
 import EditChannelModal from "./EditChannelModal";
+import MessageFileModal from "./MessageFileModal";
 
 export {
   InitialModal,
@@ -20,4 +21,5 @@ export {
   DeleteServerModal,
   DeleteChannelModal,
   EditChannelModal,
+  MessageFileModal,
 };

@@ -11,6 +11,7 @@ import {
   InviteModal,
   LeaveServerModal,
   MembersModal,
+  MessageFileModal,
 } from "../modals";
 import { useModalStore } from "@/hooks/useModalStore";
 
@@ -38,6 +39,7 @@ export const ModalProvider = () => {
       <DeleteServerModal />
       <DeleteChannelModal />
       <EditChannelModal />
+      <MessageFileModal />
     </>
   );
 };
