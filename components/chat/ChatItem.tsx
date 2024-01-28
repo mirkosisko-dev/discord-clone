@@ -14,6 +14,7 @@ import { Edit, FileIcon, Trash } from "lucide-react";
 import UserAvatar from "../userAvatar";
 import ActionTooltip from "../actionTooltip";
 
+import { useModalStore } from "@/hooks/useModalStore";
 import { cn } from "@/lib/utils";
 import { roleIconMap } from "../modals/MembersModal";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -52,7 +53,8 @@ const ChatItem: FC<IChatItemProps> = ({
   socketUrl,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+
+  const { onOpen } = useModalStore();
 
   const fileType = fileUrl?.split(".").pop();
 
@@ -65,6 +67,7 @@ const ChatItem: FC<IChatItemProps> = ({
   const isImage = fileUrl && !isPDF;
 
   const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: { content },
   });
 
@@ -225,7 +228,15 @@ const ChatItem: FC<IChatItemProps> = ({
           )}
           {canDeleteMessage && (
             <ActionTooltip label="delete">
-              <Trash className="ml-auto h-4 w-4 cursor-pointer text-zinc-500 transition hover:text-zinc-600 dark:hover:text-zinc-300" />
+              <Trash
+                className="ml-auto h-4 w-4 cursor-pointer text-zinc-500 transition hover:text-zinc-600 dark:hover:text-zinc-300"
+                onClick={() =>
+                  onOpen("deleteMessage", {
+                    apiUrl: `${socketUrl}/${id}`,
+                    query: socketQuery,
+                  })
+                }
+              />
             </ActionTooltip>
           )}
         </div>

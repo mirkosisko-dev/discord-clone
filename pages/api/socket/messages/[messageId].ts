@@ -29,7 +29,8 @@ export default async function handler(
 
     const { content } = req.body;
 
-    if (!content) return res.status(400).json({ error: "Content missing" });
+    if (!content && req.method === "PATCH")
+      return res.status(400).json({ error: "Content missing" });
 
     const server = await db.server.findFirst({
       where: {

@@ -5,6 +5,7 @@ import {
   CreateChannelModal,
   CreateServerModal,
   DeleteChannelModal,
+  DeleteMessageModal,
   DeleteServerModal,
   EditChannelModal,
   EditServerModal,
@@ -40,6 +41,7 @@ export const ModalProvider = () => {
       <DeleteChannelModal />
       <EditChannelModal />
       <MessageFileModal />
+      <DeleteMessageModal />
     </>
   );
 };
