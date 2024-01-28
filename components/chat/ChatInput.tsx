@@ -7,10 +7,12 @@ import qs from "query-string";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Smile } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { useModalStore } from "@/hooks/useModalStore";
+
+import EmojiPicker from "../emojiPicker";
 
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
@@ -37,7 +39,7 @@ const ChatInput: FC<IChatInputProps> = ({ apiUrl, query, name, type }) => {
     },
   });
 
-  const isLoading = form.formState.isSubmitted;
+  const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -80,7 +82,11 @@ const ChatInput: FC<IChatInputProps> = ({ apiUrl, query, name, type }) => {
                   />
 
                   <div className="absolute right-8 top-7">
-                    <Smile />
+                    <EmojiPicker
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value} ${emoji}`)
+                      }
+                    />
                   </div>
                 </div>
               </FormControl>
