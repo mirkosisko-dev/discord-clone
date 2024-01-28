@@ -4,7 +4,8 @@ import { redirectToSignIn } from "@clerk/nextjs";
 
 import { currentProfile } from "@/lib/currentProfile";
 import { db } from "@/lib/db";
-import { ChatHeader, ChatInput } from "@/components/chat";
+
+import { ChatHeader, ChatInput, ChatMessages } from "@/components/chat";
 
 interface IChannelPageProps {
   params: {
@@ -44,7 +45,22 @@ const ChannelPage: FC<IChannelPageProps> = async ({ params }) => {
         type="channel"
       />
 
-      <div className="flex-1">Future Messages</div>
+      <div className="flex-1">
+        <ChatMessages
+          member={member}
+          name={channel.name}
+          chatId={channel.id}
+          type="channel"
+          apiUrl="/api/messages"
+          socketQuery={{
+            channelId: channel.id,
+            serverId: channel.serverId,
+          }}
+          socketUrl="/api/socket/messages"
+          paramKey="channelId"
+          paramValue={channel.id}
+        />
+      </div>
 
       <ChatInput
         name={channel.name}

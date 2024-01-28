@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ourFileRouter } from "./api/uploadthing/core";
 import {
   ModalProvider,
+  QueryProvider,
   SocketProvider,
   ThemeProvider,
 } from "@/components/providers";
@@ -47,7 +48,7 @@ export default function RootLayout({
                 routerConfig={extractRouterConfig(ourFileRouter)}
               />
               <ModalProvider />
-              {children}
+              <QueryProvider>{children}</QueryProvider>
             </SocketProvider>
           </ThemeProvider>
         </body>

@@ -59,7 +59,7 @@ const FileUpload: FC<IFileUploadProps> = ({ endpoint, value, onChange }) => {
   return (
     <UploadDropzone
       endpoint={endpoint}
-      onClientUploadComplete={(res) => onChange(res?.[0].url)}
+      onClientUploadComplete={(res) => onChange(res?.[0]?.url)}
       onUploadError={(error: Error) => console.log({ uploadError: error })}
     />
   );
