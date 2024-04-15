@@ -9,7 +9,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Message not allowed" });
-
+  console.log('here')
   try {
     const profile = await currentProfilePages(req);
 
